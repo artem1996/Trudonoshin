@@ -1,0 +1,20 @@
+#ifndef NOEXP_H
+#define NOEXP_H
+#include "gauss.h"
+
+class noExp
+{
+    int x, y;
+    double dx;
+    double dy;
+    gauss *matrix;
+    double* prev_solution;
+public:
+    noExp(int tx, int ty, double tt, double ta);
+    ~noExp();
+    double* iteration();
+    double** share();
+    void sharePrint(double** shara);
+};
+
+#endif // NOEXP_H
