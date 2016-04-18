@@ -35,8 +35,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         sprintf(maxT, "%.3f", maxTemp);
         ui -> minT -> setText(minT);
         ui -> maxT -> setText(maxT);
-        int rangeX = 500 / dx;
-        int rangeY = 500 / dy;
+        int rangeX = 480 / dx;
+        int rangeY = 120 / dy;
         int allX = rangeX * dx;
         int allY = rangeY * dy;
         double rangeTemp = maxTemp - minTemp;
@@ -64,7 +64,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 if (perc < 0) perc = 0;
                 col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
-                painter.drawPoint(i + 20, j + 80);
+                painter.drawPoint(i + 30, j + 80);
             }
     }
 }
@@ -86,7 +86,7 @@ void MainWindow::go_out()
             ui->dX->setReadOnly(1);
             ui->dY->setReadOnly(1);
             ui->kA->setReadOnly(1);
-            ui->lErr->setText("Начнём, пожалуй!\nНачальное состояние.");
+            ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
             ui->buttonGo->setText("Итерация!");
             meth = new noExp(dx, dy, dt, a);
             shara = meth->share(minTemp, maxTemp);
