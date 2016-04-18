@@ -30,12 +30,16 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap));
     QColor col;
     if(shara != NULL) {
-        int rangeX = 250 / dx;
-        int rangeY = 250 / dy;
+        int rangeX = 500 / dx;
+        int rangeY = 500 / dy;
         int allX = rangeX * dx;
         int allY = rangeY * dy;
         double rangeTemp = maxTemp - minTemp;
         painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
+        col.setRgb(255, 0, 0);
+        painter.fillRect(5, 90, 5, 5, col);
+        col.setRgb(0, 0, 255);
+        painter.fillRect(5, 100, 5, 5, col);
         for(int i = 0; i < allX; i++)
             for(int j = 0; j < allY; j++) {
                 int qX = i / rangeX;
@@ -54,7 +58,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 double perc = (temper / rangeTemp) > 1 ? 1 : temper / rangeTemp;
                 col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
-                painter.drawPoint(i + 50, j + 100);
+                painter.drawPoint(i + 50, j + 80);
             }
     }
 }
@@ -78,17 +82,17 @@ void MainWindow::go_out()
             ui->dX->setReadOnly(1);
             ui->dY->setReadOnly(1);
             ui->kA->setReadOnly(1);
-            ui->lErr->setText("Начнём, пожалуй!\nНачальное состояние.");
+            ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
             ui->buttonGo->setText("Итерация!");
             meth = new noExp(dx, dy, dt, a);
-            shara = meth->share();
+            shara = meth->share(minTemp, maxTemp);
             repaint();
             meth->sharePrint(shara);
             shara = NULL;
             counter++;
             return;
         } else {
-            ui->lErr->setText("Что-то здесь не так...\nМожет оплавились провода?");
+            ui->lErr->setText("Что-то здесь не так... Может оплавились провода?");
             return;
         }
     }
@@ -97,10 +101,10 @@ void MainWindow::go_out()
     if(!to_exit) {
         tempSolution = meth->iteration();
         char out3[60];
-        sprintf(out3, "Итерация № %d\nВремя %f\0", counter, time);
+        sprintf(out3, "Итерация № %d; Время %f\0", counter, time);
         ui->lErr->setText(out3);
         counter++;
-        shara = meth->share();
+        shara = meth->share(minTemp, maxTemp);
         repaint();
         meth -> sharePrint(shara);
         shara = NULL;

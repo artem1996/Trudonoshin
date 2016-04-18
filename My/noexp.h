@@ -13,7 +13,7 @@ public:
     noExp(int tx, int ty, double tt, double ta);
     ~noExp();
     double* iteration();
-    double** share();
+    double** share(double& min, double &max);
     void sharePrint(double** shara);
 };
 

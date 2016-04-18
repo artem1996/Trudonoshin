@@ -9,8 +9,8 @@ noExp::noExp(int tx, int ty, double tt, double ta)
 {
     x = tx;
     y = ty;
-    dx = ta * tt / (LENGTHX / x);
-    dy = ta * tt / (LENGTXY / y);
+    dx = ta * tt / (LENGTHX * LENGTHX / x / x);
+    dy = ta * tt / (LENGTXY * LENGTXY / y / y);
     x -= 1;
     y -= 1;
     matrix = new gauss(x * y);

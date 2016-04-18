@@ -9,8 +9,8 @@ noExp::noExp(int tx, int ty, double tt, double ta)
 {
     x = tx;
     y = ty;
-    dx = ta * tt / (LENGTHX / x);
-    dy = ta * tt / (LENGTXY / y);
+    dx = ta * tt / (LENGTHX * LENGTHX / x / x);
+    dy = ta * tt / (LENGTXY * LENGTXY / y / y);
     x -= 1;
     y -= 1;
     matrix = new gauss(x * y);
@@ -73,7 +73,8 @@ double* noExp::iteration() {
     return prev_solution;
 }
 
-double** noExp::share() {
+double** noExp::share(double& min, double &max) {
+    min = max = MAXTEMP;
     int tx = x + 2;
     int ty = y + 2;
     double **shareMatrix = new double*[tx];
@@ -94,8 +95,14 @@ double** noExp::share() {
     for(; i < tx; i++)
         shareMatrix[i][ty - 1] = MAXTEMP;
     for(i = 1; i < tx - 1; i++)
-        for(int j = 1; j < ty - 1; j++)
-            shareMatrix[i][j] = prev_solution[(i - 1) * y + j - 1];
+        for(int j = 1; j < ty - 1; j++) {
+            double temp = prev_solution[(i - 1) * y + j - 1];
+            shareMatrix[i][j] = temp;
+            if(temp < min)
+                min = temp;
+            if(temp > max)
+                max = temp;
+        }
     return shareMatrix;
 }
 
