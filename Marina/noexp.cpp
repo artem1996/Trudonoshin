@@ -69,7 +69,8 @@ double* noExp::iteration() {
     return prev_solution;
 }
 
-double** noExp::share() {
+double** noExp::share(double& min, double &max) {
+    min = max = MAXTEMP;
     int tx = x + 2;
     int ty = y + 2;
     double **shareMatrix = new double*[tx];
@@ -89,8 +90,14 @@ double** noExp::share() {
         shareMatrix[i][ty - 1] = prev_solution[i * y - 1];
     shareMatrix[tx - 1][ty - 1] = MAXTEMP;
     for(i = 1; i < tx - 1; i++)
-        for(int j = 1; j < ty - 1; j++)
-            shareMatrix[i][j] = prev_solution[(i - 1) * y + j - 1];
+        for(int j = 1; j < ty - 1; j++) {
+            double temp = prev_solution[(i - 1) * y + j - 1];
+            shareMatrix[i][j] = temp;
+            if(temp < min)
+                min = temp;
+            if(temp > max)
+                max = temp;
+        }
     return shareMatrix;
 }
 

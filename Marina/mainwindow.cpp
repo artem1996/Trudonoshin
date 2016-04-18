@@ -30,31 +30,41 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap));
     QColor col;
     if(shara != NULL) {
-        int rangeX = 250 / dx;
-        int rangeY = 250 / dy;
+        char minT[10], maxT[10];
+        sprintf(minT, "%.3f", minTemp);
+        sprintf(maxT, "%.3f", maxTemp);
+        ui -> minT -> setText(minT);
+        ui -> maxT -> setText(maxT);
+        int rangeX = 500 / dx;
+        int rangeY = 500 / dy;
         int allX = rangeX * dx;
         int allY = rangeY * dy;
         double rangeTemp = maxTemp - minTemp;
         painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
+        col.setRgb(255, 0, 0);
+        painter.fillRect(345, 56, 10, 10, col);
+        col.setRgb(0, 0, 255);
+        painter.fillRect(445, 56, 10, 10, col);
         for(int i = 0; i < allX; i++)
             for(int j = 0; j < allY; j++) {
                 int qX = i / rangeX;
                 int qY = j / rangeY;
                 double pY = (double)(j % rangeY) / rangeY;
                 double pX = (double)(i % rangeX) / rangeX;
-                double temp = sqrt(pY * pY + pX * pX);
+                double temp = 1.061 * sqrt(pY * pY + pX * pX);
                 double temper = shara[qX][qY] * (1 - (temp > 1 ? 1 : temp));
-                temp = sqrt((pX * pX) + (1 - pY) * (1 - pY));
+                temp = 1.061 * sqrt((pX * pX) + (1 - pY) * (1 - pY));
                 temper += shara[qX][qY + 1] * (1 - (temp > 1 ? 1 : temp));
-                temp = sqrt((1 - pX) * (1 - pX) + pY * pY);
+                temp = 1.061 * sqrt((1 - pX) * (1 - pX) + pY * pY);
                 temper += shara[qX + 1][qY] * (1 - (temp > 1 ? 1 : temp));
-                temp = sqrt((1 - pX) * (1 - pX) + (1 - pY) * (1 - pY));
+                temp = 1.061 * sqrt((1 - pX) * (1 - pX) + (1 - pY) * (1 - pY));
                 temper += shara[qX + 1][qY + 1] * (1 - (temp > 1 ? 1 : temp));
                 temper -= minTemp;
-                double perc = (temper / rangeTemp) > 1 ? 1 : temper / rangeTemp;
+                double perc = temper / rangeTemp;
+                if (perc < 0) perc = 0;
                 col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
-                painter.drawPoint(i + 50, j + 100);
+                painter.drawPoint(i + 20, j + 80);
             }
     }
 }
@@ -64,8 +74,6 @@ void MainWindow::go_out()
     static int counter;
     static double a, dt;
     if(!counter) {
-        minTemp = 20;
-        maxTemp = 205;
         std::stringstream ss;
         ss << ui->dT->text().toUtf8().constData() << "\n";
         ss >> dt;
@@ -81,14 +89,14 @@ void MainWindow::go_out()
             ui->lErr->setText("Начнём, пожалуй!\nНачальное состояние.");
             ui->buttonGo->setText("Итерация!");
             meth = new noExp(dx, dy, dt, a);
-            shara = meth->share();
+            shara = meth->share(minTemp, maxTemp);
             repaint();
             meth->sharePrint(shara);
             shara = NULL;
             counter++;
             return;
         } else {
-            ui->lErr->setText("Что-то здесь не так...\nМожет оплавились провода?");
+            ui->lErr->setText("Что-то здесь не так... Может оплавились провода?");
             return;
         }
     }
@@ -97,10 +105,10 @@ void MainWindow::go_out()
     if(!to_exit) {
         tempSolution = meth->iteration();
         char out3[60];
-        sprintf(out3, "Итерация № %d\nВремя %f\0", counter, time);
+        sprintf(out3, "Итерация № %d; Время %f", counter, time);
         ui->lErr->setText(out3);
         counter++;
-        shara = meth->share();
+        shara = meth->share(minTemp, maxTemp);
         repaint();
         meth -> sharePrint(shara);
         shara = NULL;
