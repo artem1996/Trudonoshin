@@ -49,16 +49,23 @@ void MainWindow::paintEvent(QPaintEvent *event)
             for(int j = 0; j < allY; j++) {
                 int qX = i / rangeX;
                 int qY = j / rangeY;
-                double pY = (double)(j % rangeY) / rangeY;
                 double pX = (double)(i % rangeX) / rangeX;
-                double temp = 1.061 * sqrt(pY * pY + pX * pX);
-                double temper = shara[qX][qY] * (1 - (temp > 1 ? 1 : temp));
-                temp = 1.061 * sqrt((pX * pX) + (1 - pY) * (1 - pY));
-                temper += shara[qX][qY + 1] * (1 - (temp > 1 ? 1 : temp));
-                temp = 1.061 * sqrt((1 - pX) * (1 - pX) + pY * pY);
-                temper += shara[qX + 1][qY] * (1 - (temp > 1 ? 1 : temp));
-                temp = 1.061 * sqrt((1 - pX) * (1 - pX) + (1 - pY) * (1 - pY));
-                temper += shara[qX + 1][qY + 1] * (1 - (temp > 1 ? 1 : temp));
+                double pY = (double)(j % rangeY) / rangeY;
+                double temper;
+                if(pX < 0.5) {
+                    if(pY < 0.5) { //A
+                        temper = shara[qX][qY] * (2 - 2 * pX - pY) + shara[qX + 1][qY] * pX + shara[qX + 1][qY + 1] * pY + shara[qX][qY + 1] * pX;
+                    } else { //D
+                        temper = shara[qX][qY] * (1 - pY) + shara[qX + 1][qY] * pX + shara[qX + 1][qY + 1] * (1 - pY) + shara[qX][qY + 1] * (2 * pY - pX);
+                    }
+                } else {
+                    if(pY < 0.5) { //B
+                        temper = shara[qX][qY] * pY + shara[qX + 1][qY] * (1 + pX - 2 * pY) + shara[qX + 1][qY + 1] * pY + shara[qX][qY + 1] * (1 - pX);
+                    } else { //C
+                        temper = shara[qX][qY] * (1 - pY) + shara[qX + 1][qY] * (1 - pX) + shara[qX + 1][qY + 1] * (2 * pX - 1 + pY) + shara[qX][qY + 1] * (1 - pX);
+                    }
+                }
+                temper /= 2;
                 temper -= minTemp;
                 double perc = temper / rangeTemp;
                 if (perc < 0) perc = 0;
