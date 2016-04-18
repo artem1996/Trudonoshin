@@ -2,8 +2,7 @@
 #define NOEXP_H
 #include "gauss.h"
 
-class noExp
-{
+class noExp {
     int x, y;
     double dx;
     double dy;
