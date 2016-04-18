@@ -2,15 +2,15 @@
 
 #define MAXTEMP 700
 #define START 20
-#define LENGTHX 5
-#define LENGTXY 5
+#define LENGTHX 5.0
+#define LENGTXY 5.0
 
 noExp::noExp(int tx, int ty, double tt, double ta)
 {
     x = tx;
     y = ty;
-    dx = ta * tt / (5 / x);
-    dy = ta * tt / (5 / y);
+    dx = ta * tt / (LENGTHX / x);
+    dy = ta * tt / (LENGTXY / y);
     x -= 1;
     y -= 1;
     matrix = new gauss(x * y);
@@ -102,13 +102,14 @@ double** noExp::share() {
 void noExp::sharePrint(double **shara) {
     int tx = x + 2;
     int ty = y + 2;
-    for(int j = 0; j < tx; j++) {
-       for(int i = 0; i < ty; i++) {
+    for(int j = 0; j < ty; j++) {
+       for(int i = 0; i < tx; i++) {
            cerr << shara[i][j] << '\t';
        }
-       delete[] shara[j];
        cerr << '\n';
     }
+    for(int i = 0; i < tx; i++)
+        delete[] shara[i];
     delete[] shara;
     cerr << "---------------------------------" << endl;
 }
