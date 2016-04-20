@@ -7,6 +7,7 @@ class noExp
     int x, y;
     double dx;
     double dy;
+    double ax;
     gauss *matrix;
     double* prev_solution;
 public:

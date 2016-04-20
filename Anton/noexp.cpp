@@ -5,8 +5,7 @@
 #define START 20.0
 #define LENGTH 4.0
 
-noExp::noExp(int ty, double tt, double ta)
-{
+noExp::noExp(int ty, double tt, double ta) {
     y = ty;
     step = LENGTH / ty;
     d = ta * tt / ( step * step);

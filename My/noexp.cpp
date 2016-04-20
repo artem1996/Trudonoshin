@@ -30,6 +30,10 @@ double* noExp::iteration() {
     for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
             int count = i * y + j;
+            if(i == x / 2 && j == y / 2) {
+                matrix -> into_matrix(count, count, 1);
+                continue;
+            }
             matrix -> into_constants(count, prev_solution[count]);
             matrix -> into_matrix(count, count, 1 + 2 * dx + 2 * dy);
             if(i == 0) {

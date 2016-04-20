@@ -69,6 +69,15 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 temper -= minTemp;
                 double perc = temper / rangeTemp;
                 if (perc < 0) perc = 0;
+                int R,G,B;
+                if(perc > 0.5) {
+                    R = (perc - 0.5) * 2;
+                } else {
+                    B = perc * 2;
+                }
+                if(perc > 0.25 && perc < 0.75) {
+                    G = (perc - 0.25) * 2;
+                }
                 col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
                 painter.drawPoint(i + 20, j + 80);
