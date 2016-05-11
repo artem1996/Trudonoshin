@@ -6,7 +6,6 @@
 #include <sstream>
 #include <cmath>
 #include <cstdio>
-#define WIDTH 240
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -36,20 +35,22 @@ void MainWindow::paintEvent(QPaintEvent *event)
         sprintf(maxT, "%.3f", maxTemp);
         ui -> minT -> setText(minT);
         ui -> maxT -> setText(maxT);
-        int range = WIDTH / dy;
-        int all = range * dy;
+        int rangeX = 120 / dx;
+        int rangeY = 280 / dy;
+        int allX = rangeX * dx;
+        int allY = rangeY * dy;
         double rangeTemp = maxTemp - minTemp;
         painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
         col.setRgb(255, 0, 0);
         painter.fillRect(345, 56, 10, 10, col);
         col.setRgb(0, 0, 255);
         painter.fillRect(445, 56, 10, 10, col);
-        for(int j = 0; j < all; j++)
-            for(int i = all - j; i <= all; i++) {
-                int qX = i / range;
-                int qY = j / range;
-                double pX = (double)(i % range) / range;
-                double pY = (double)(j % range) / range;
+        for(int i = 0; i < allX; i++)
+            for(int j = 0; j < allY; j++) {
+                int qX = i / rangeX;
+                int qY = j / rangeY;
+                double pX = (double)(i % rangeX) / rangeX;
+                double pY = (double)(j % rangeY) / rangeY;
                 double temper;
                 if(pX < 0.5) {
                     if(pY < 0.5) { //A
@@ -82,10 +83,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
                     G = 0;
                 }
                 col.setRgb(R * 255, G * 255, B * 255);
-                //col.setRgb(perc * 255, 0, 255 * (1 - perc));
+//                col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
-                painter.drawPoint(i + 30, j + 80);
-                painter.drawPoint(30 + 2 * WIDTH - i, j + 80);
+                painter.drawPoint(i + 210, j + 80);
             }
     }
 }
@@ -93,28 +93,51 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::go_out()
 {
     static int counter;
+    static double a, dt;
     if(!counter) {
+        std::stringstream ss;
+        ss << ui->dT->text().toUtf8().constData() << "\n";
+        ss >> dt;
+        ss << ui->kA->text().toUtf8().constData();
+        ss >> a;
+        dx = atoi(ui->dX->text().toUtf8().constData());
         dy = atoi(ui->dY->text().toUtf8().constData());
-        if(dy > 2) {
+        if(dt > 0 && dx > 2 && dy > 2 && a > 0) {
+            ui->dT->setReadOnly(1);
+            ui->dX->setReadOnly(1);
             ui->dY->setReadOnly(1);
+            ui->kA->setReadOnly(1);
             ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
             ui->buttonGo->setText("Итерация!");
-            meth = new noExp(dy);
-            tempSolution = meth->iteration();
-            char out3[60];
-            sprintf(out3, "Готово!");
-            ui->lErr->setText(out3);
-            counter++;
+            meth = new noExp(dx, dy, dt, a);
             shara = meth->share(minTemp, maxTemp);
             repaint();
-            meth -> sharePrint(shara);
+            meth->sharePrint(shara);
             shara = NULL;
-            ui->buttonGo->setText("Выход");
+            counter++;
             return;
         } else {
             ui->lErr->setText("Что-то здесь не так... Может оплавились провода?");
             return;
         }
-    } else
-        exit(0);
+    }
+    double time = counter * dt;
+    static int to_exit = 0;
+    if(!to_exit) {
+        tempSolution = meth->iteration();
+        char out3[60];
+        sprintf(out3, "Итерация № %d; Время %f", counter, time);
+        ui->lErr->setText(out3);
+        counter++;
+        shara = meth->share(minTemp, maxTemp);
+        repaint();
+        meth -> sharePrint(shara);
+        shara = NULL;
+    }
+    if(time >= 15) {
+        to_exit++;
+        ui->buttonGo->setText("Выход");
+        if(to_exit > 1)
+            exit(0);
+    }
 }

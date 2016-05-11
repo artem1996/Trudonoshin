@@ -8,7 +8,6 @@ gauss::gauss(int n) {
     }
     constants = new double[capacity];
     solution = new double[capacity];
-
 }
 
 gauss::~gauss() {

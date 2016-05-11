@@ -4,12 +4,15 @@
 
 class noExp
 {
-    int capacity, y;
-    double d, normal, step;
+    int x, y;
+    double dx;
+    double dy;
+    double ddx;
+    double ax;
     gauss *matrix;
     double* prev_solution;
 public:
-    noExp(int step);
+    noExp(int tx, int ty, double tt, double ta);
     ~noExp();
     double* iteration();
     double** share(double& min, double &max);

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>540</width>
-    <height>350</height>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,11 +27,41 @@
      <string>Поехали!</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="kA">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>31</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="dT">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>30</y>
+      <width>31</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="dX">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>10</y>
+      <width>31</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
    <widget class="QLineEdit" name="dY">
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>20</y>
+      <y>30</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -40,17 +70,56 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="ldX">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>10</y>
+      <width>91</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Шагов по OX</string>
+    </property>
+   </widget>
    <widget class="QLabel" name="ldY">
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>20</y>
+      <y>30</y>
       <width>91</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
      <string>Шагов по OY</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lkA">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Коэфициент теплопроводности</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ldT">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>121</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Шаг по времени</string>
     </property>
    </widget>
    <widget class="QLabel" name="lErr">
@@ -93,9 +162,15 @@
     </property>
    </widget>
    <zorder>dY</zorder>
+   <zorder>dT</zorder>
    <zorder>lErr</zorder>
+   <zorder>lkA</zorder>
    <zorder>buttonGo</zorder>
+   <zorder>dX</zorder>
+   <zorder>ldX</zorder>
    <zorder>ldY</zorder>
+   <zorder>ldT</zorder>
+   <zorder>kA</zorder>
    <zorder>maxT</zorder>
    <zorder>minT</zorder>
   </widget>
