@@ -9,10 +9,10 @@ noExp::noExp(int tx, int ty, double tt, double ta)
 {
     x = tx;
     y = ty;
-    ddx = (LENGTHX * LENGTHX / x / x);
+    ddx = (LENGTHX / x);
     dx = ta * tt / (LENGTHX * LENGTHX / x / x);
     dy = ta * tt / (LENGTXY * LENGTXY / y / y);
-    ax = LENGTHX / x + 1;
+    //ax = LENGTHX / x + 1;
     x += 1;
     y += 1;
     matrix = new gauss(x * y);
@@ -37,9 +37,9 @@ double* noExp::iteration() {
         for(int j = 0; j < y; j++) {
             int count = i * y + j;
             if(i == 0 && j == y / 2) {
-                matrix -> into_matrix(count, count + y, 1);
-                matrix -> into_matrix(count, count, -1 - ddx);
-                matrix -> into_constants(count, 0);
+                matrix -> into_matrix(count, count + y, 2);
+                matrix -> into_matrix(count, count, -2 - 3*ddx);
+                matrix -> into_constants(count, -30*ddx);
                 continue;
             }
             if( i > 0 && i < x - 1 && j > 0 && j < y - 1) {
@@ -64,11 +64,14 @@ double* noExp::iteration() {
             }
         }
     }
+//    matrix -> print_system();
+
     delete[] prev_solution;
     if(matrix->triangle()) {
         matrix->print_system();
         return NULL;
     };
+    //matrix -> print_system();
     matrix->do_solution();
     prev_solution = matrix->get_solution();
     matrix->reset();

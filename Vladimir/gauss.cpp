@@ -93,7 +93,7 @@ int gauss::print_system() {
         for(int j = 0; j < capacity; j++) {
             cout << '|' << matrix[i][j] << '\t';
         }
-        cerr << '|' << constants[i] << endl;
+        cout << '|' << constants[i] << endl;
     }
     cout << ".................." << endl;
 }
