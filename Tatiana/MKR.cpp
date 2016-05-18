@@ -70,7 +70,10 @@ double* MKR::iteration() {
     matrix->do_solution();
     prev_solution = matrix->get_solution();
     matrix->reset();
-    return prev_solution;
+    double *answer = new double[x * y];
+    for(int i = 0; i < x * y; i++)
+        answer[i] = prev_solution[i];
+    return answer;
 }
 
 double** MKR::share(double& min, double &max) {
@@ -101,4 +104,13 @@ void MKR::sharePrint(double **shara) {
         delete[] shara[i];
     delete[] shara;
     cerr << "---------------------------------" << endl;
+}
+
+void MKR::approximation(double** stepX1, double** stepX2) {
+    for(int i = 0; i < x; i++)
+        for(int j = 0; j < y; j++)
+            stepX1[i][j] = (4 * stepX2[i * 2][j * 2] - stepX1[i][j]) / 3.0;
+    for(int i = 0; i < x * 2; i++)
+        delete[] stepX2[i];
+    delete[] stepX2;
 }

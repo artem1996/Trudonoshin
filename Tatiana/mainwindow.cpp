@@ -8,8 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
     QObject::connect(ui->buttonGo, SIGNAL(clicked()), this, SLOT(go_out()));
     shara = NULL;
@@ -90,6 +89,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::go_out()
 {
     static int counter;
+    static double* answer1;
+    static double* answer2;
     if(!counter) {
         dx = atoi(ui->dX->text().toUtf8().constData());
         dy = atoi(ui->dY->text().toUtf8().constData());
@@ -98,11 +99,9 @@ void MainWindow::go_out()
             ui->dY->setReadOnly(1);
             ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
             ui->buttonGo->setText("Расчёт!");
-            meth = new MKR(dx, dy);
-            shara = meth->share(minTemp, maxTemp);
-            repaint();
-            meth->sharePrint(shara);
-            shara = NULL;
+            answer1 = step();
+            dx *= 2;
+            dy *= 2;
             counter++;
             return;
         } else {
@@ -110,24 +109,56 @@ void MainWindow::go_out()
             return;
         }
     }
-    static int to_exit = 0;
+    if(counter == 1) {
+        answer2 = step();
+        counter++;
+        return;
+    } else {
+        exit(0);
+        delete answer1;
+        delete answer2;
+    }
+}
+
+double* MainWindow::step() {
+    meth = new MKR(dx, dy);
+    double *answer;
     char out3[60];
-    if(meth->iteration() == NULL) {
+    if((answer = meth->iteration()) == NULL) {
         sprintf(out3, "Усё пропало, Шеф!");
         ui->lErr->setText(out3);
-        to_exit++;
-        return;
-    }
-    if(!to_exit) {
-        sprintf(out3, "Решение!");
+        return NULL;
+    } else {
+        sprintf(out3, "Решение c шагом по OX = %d, OY = %d", dx, dy);
         ui->lErr->setText(out3);
-        shara = meth->share(minTemp, maxTemp);
-        repaint();
-        meth -> sharePrint(shara);
-        shara = NULL;
-        to_exit++;
-        ui->buttonGo->setText("Выход");
-        return;
-    } else
-        exit(0);
+    }
+    shara = meth->share(minTemp, maxTemp);
+    repaint();
+    meth->sharePrint(shara);
+    shara = NULL;
+    delete meth;
+    return answer;
+}
+
+double* MainWindow::approximation(double* answer1, double* answer2) {
+    dx /= 2;
+    dy /= 2;
+    double* answer = new double[count];
+    for(int i = 0; i < count; i++) {
+        answer[i] = (4 * answer2[i * 2] - answer1[i]) / 3.0;
+    }
+    min = max = MAXTEMP;
+    double **shareMatrix = new double*[x];
+    for(int i = 0; i < x; i++)
+        shareMatrix[i] = new double[y];
+    for(int i = 0; i < x; i++)
+        for(int j = 0; j < y; j++) {
+            double temp = prev_solution[i * y + j];
+            shareMatrix[i][j] = temp;
+            if(temp < min)
+                min = temp;
+            if(temp > max)
+                max = temp;
+        }
+    return shareMatrix;
 }

@@ -16,6 +16,7 @@ public:
     double* iteration();
     double** share(double& min, double &max);
     void sharePrint(double** shara);
+    void approximation(double** stepX1, double** stepX2);
 };
 
 #endif // NOEXP_H

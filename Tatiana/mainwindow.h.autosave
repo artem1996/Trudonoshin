@@ -27,6 +27,7 @@ private:
 public slots:
     void go_out();
     double* step();
+    double* approximation(double*, double*);
 };
 
 #endif // MAINWINDOW_H
