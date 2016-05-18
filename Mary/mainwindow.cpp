@@ -29,8 +29,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         sprintf(maxT, "%.3f", maxTemp);
         ui -> minT -> setText(minT);
         ui -> maxT -> setText(maxT);
-        int rangeX = 500 / dx;
-        int rangeY = 300 / dy;
+        int rangeX = 480 / dx;
+        int rangeY = 480 / dy;
         int allX = rangeX * dx;
         int allY = rangeY * dy;
         double rangeTemp = maxTemp - minTemp;
@@ -78,7 +78,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 }
                 col.setRgb(R * 255, G * 255, B * 255);
                 painter.setPen(col);
-                painter.drawPoint(i + 20, j + 80);
+                painter.drawPoint(i + 30, j + 80);
             }
     }
 }
@@ -91,7 +91,7 @@ void MainWindow::go_out()
     if(!counter) {
         dx = atoi(ui->dX->text().toUtf8().constData());
         dy = atoi(ui->dY->text().toUtf8().constData());
-        if(dx > 7 && dy > 5 && dx % 4 == 0 && dy % 3 == 0) {
+        if(dx > 7 && dy > 7 && dx % 4 == 0 && dy % 8 == 0) {
             ui->dX->setReadOnly(1);
             ui->dY->setReadOnly(1);
             ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
@@ -139,7 +139,7 @@ MKR* MainWindow::step() {
         ui->lErr->setText(out3);
         return NULL;
     } else {
-        sprintf(out3, "Решение c шагом по OX = %d, OY = %d", dx, dy);
+        sprintf(out3, "Решение c количеством шагов по OX = %d, OY = %d", dx, dy);
         ui->lErr->setText(out3);
     }
     shara = meth->share(minTemp, maxTemp);

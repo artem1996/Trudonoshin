@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "qpainter.h"
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdio>
 #include "MKR.h"
 
 namespace Ui {
@@ -26,8 +31,7 @@ private:
 
 public slots:
     void go_out();
-    double* step();
-    double* approximation(double*, double*);
+    MKR* step();
 };
 
 #endif // MAINWINDOW_H

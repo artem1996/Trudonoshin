@@ -1,15 +1,16 @@
 #include "MKR.h"
 
-#define MAXTEMP 200
+#define MAXTEMP 100
 #define START 40
-#define LENGTHX 10.0
-#define LENGTHY 6.0
+#define LENGTHX 8.0
+#define LENGTHY 8.0
 
 MKR::MKR(int tx, int ty) {
     x = tx;
     y = ty;
     dx = x / LENGTHX;
     dy = y / LENGTHY;;
+    dn = 1 / sqrt(1 / dx / dx + 1 / dy / dy);
     ddx = dx * dx;
     ddy = dy * dy;
     x += 1;
@@ -17,12 +18,6 @@ MKR::MKR(int tx, int ty) {
     matrix = new gauss(x * y);
     matrix -> reset();
     prev_solution = new double[x * y];
-    for(int i = 0; i < x * y; i++) {
-        if(i / y >= x / 4 && i / y <= x / 4 * 3 && i % y >= y / 3 && i % y <= y / 3 * 2)
-            prev_solution[i] = MAXTEMP;
-        else
-            prev_solution[i] = START;
-    }
 }
 
 MKR::~MKR() {
@@ -34,19 +29,49 @@ double* MKR::iteration() {
     for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
             int count = i * y + j;
-            if(i == x - 1) {
-                matrix -> into_matrix(count, count, -1);
-                matrix -> into_matrix(count, count - y, 1);
+            if (i == 0 || i == x-1 || j == 0 || j == y-1) {
+                matrix ->into_constants(count, MAXTEMP);
+                matrix ->into_matrix(count, count, 1);
                 continue;
             }
-            if(i == 0 || j == 0 || j == y - 1) {
-                matrix -> into_matrix(count, count, 1);
-                matrix -> into_constants(count, START);
+            if (i==x/4 && j==y/8*3) {
+                matrix->into_matrix(count,count, -dn-1);
+                matrix->into_matrix(count,count-y-1,dn);
                 continue;
             }
-            if(i >= x / 4 && i <= x / 4 * 3 && j >= y / 3 && j <= y / 3 * 2) {
-                matrix -> into_constants(count, MAXTEMP);
-                matrix -> into_matrix(count, count, 1);
+            if (i==x/4*2 && j==y/8*3) {
+                matrix->into_matrix(count,count, -dn-1);
+                matrix->into_matrix(count,count+y-1,dn);
+                continue;
+            }
+            if (i==x/4 && j==y/8*5) {
+                matrix->into_matrix(count,count, -dn-1);
+                matrix->into_matrix(count,count-y+1,dn);
+                continue;
+            }
+            if (i==x/4*2 && j==y/8*5) {
+                matrix->into_matrix(count,count, -dn-1);
+                matrix->into_matrix(count,count+y+1,dn);
+                continue;
+            }
+            if (i==x/4 && j>y/8*3 && j<y/8*5) {
+                matrix->into_matrix(count,count, -dx-1);
+                matrix->into_matrix(count,count-y,dx);
+                continue;
+            }
+            if (i==x/4*2 && j>y/8*3 && j<y/8*5) {
+                matrix->into_matrix(count,count, -dx-1);
+                matrix->into_matrix(count,count+y,dx);
+                continue;
+            }
+            if (j==y/8*3 && i>x/4 && i<x/4*2) {
+                matrix->into_matrix(count,count, -dy-1);
+                matrix->into_matrix(count,count-1,dy);
+                continue;
+            }
+            if (j==y/8*5 && i>x/4 && i<x/4*2) {
+                matrix->into_matrix(count,count, -dy-1);
+                matrix->into_matrix(count,count+1,dy);
                 continue;
             }
             matrix -> into_matrix(count, count, -2 * ddx - 2 * ddy);

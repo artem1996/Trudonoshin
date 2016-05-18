@@ -9,6 +9,7 @@ class MKR
     int x, y;
     double dx, ddx;
     double dy, ddy;
+    double dn;
     gauss *matrix;
     double* prev_solution;
 public:
