@@ -14,11 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    gauss.cpp \
     explicitMethod.cpp
 
 HEADERS  += mainwindow.h \
-    gauss.h \
     explicitMethod.h
 
 FORMS    += mainwindow.ui

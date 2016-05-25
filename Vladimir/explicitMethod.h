@@ -11,14 +11,14 @@ class explicitMethod
     double dx;
     double dy;
     double dn;
-    gauss *matrix;
-    double* prev_solution;
+    double **matrix;
+    double **prev_solution;
 public:
     explicitMethod(int tx, int ty, double tt, double ta);
     ~explicitMethod();
-    double* iteration();
-    double** share(double& min, double &max);
-    void sharePrint(double** shara);
+    void reset();
+    double** iteration();
+    double** sharePrint(double& min, double &max);
 };
 
 #endif // NOEXP_H

@@ -89,6 +89,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 painter.setPen(col);
                 painter.drawPoint(i + 30, j + 80);
             }
+        shara = NULL;
     }
 }
 
@@ -112,10 +113,8 @@ void MainWindow::go_out()
             ui->lErr->setText("Начнём, пожалуй! Начальное состояние.");
             ui->buttonGo->setText("Итерация!");
             meth = new explicitMethod(dx, dy, dt, a);
-            shara = meth->share(minTemp, maxTemp);
+            shara = meth->sharePrint(minTemp, maxTemp);
             repaint();
-            meth->sharePrint(shara);
-            shara = NULL;
             counter++;
             return;
         } else {
@@ -137,10 +136,8 @@ void MainWindow::go_out()
         sprintf(out3, "Итерация № %d; Время %f", counter, time);
         ui->lErr->setText(out3);
         counter++;
-        shara = meth->share(minTemp, maxTemp);
+        shara = meth->sharePrint(minTemp, maxTemp);
         repaint();
-        meth -> sharePrint(shara);
-        shara = NULL;
     }
     if(time >= 25) {
         to_exit++;
