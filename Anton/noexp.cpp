@@ -6,7 +6,7 @@
 #define LENGTH 4.0
 
 noExp::noExp(int ty) {
-    y = ty;
+    y = ty + 1;
     step = LENGTH / ty;
     d = 1.0 / ( step * step);
     normal = (step * sqrt(2) + 1);
@@ -30,7 +30,7 @@ double* noExp::iteration() {
     int control = 1;
     int counter = 1;
     matrix -> into_matrix(0, 0, 1);
-    matrix -> into_constants(0, MAXTEMP / normal);
+    matrix -> into_constants(0, MAXTEMP);
     for(int i = 1; i < capacity - 1; i++) {
 //        if(i == capacity - 3) {
 //            matrix -> into_constants(i, 200);
@@ -45,19 +45,18 @@ double* noExp::iteration() {
             matrix -> into_matrix(i, i, - normal);
             continue;
         }
+        if(i == control) {
+            control += ++counter;
+            matrix ->into_matrix(i,i,1);
+            matrix -> into_constants(i, MAXTEMP);
+            continue;
+            //matrix -> into_constants(i, 200);
+        }
 
         matrix -> into_matrix(i, i, 4 * d);
         matrix -> into_matrix(i, i - counter + 1, - d);
         matrix -> into_matrix(i, i + 1, - d);
-
-        if(i == control) {
-            control += ++counter;
-            matrix -> into_constants(i, d * MAXTEMP);
-            //matrix -> into_constants(i, 200);
-
-        } else {
-            matrix -> into_matrix(i , i - 1, - d);
-        }
+        matrix -> into_matrix(i , i - 1, - d);
         if(control == capacity) {
 
             matrix -> into_matrix(i, i - counter + 1, - d);
@@ -82,7 +81,7 @@ double* noExp::iteration() {
 
 double** noExp::share(double& min, double &max) {
     min = max = MAXTEMP;
-    int ty = y + 1;
+    int ty = y;
     int tx = y * 2 + 1;
     double **shareMatrix = new double*[tx];
     for(int i = 0; i < tx; i++) {
@@ -104,13 +103,11 @@ double** noExp::share(double& min, double &max) {
             j = y;
         }
     }
-    for(int i = 0; i <= y + y; i++)
-        shareMatrix[i][y] = MAXTEMP;
     return shareMatrix;
 }
 
 void noExp::sharePrint(double **shara) {
-    int ty = y + 1;
+    int ty = y;
     int tx = y * 2 + 1;
     for(int j = 0; j < ty; j++) {
        for(int i = 0; i < tx; i++) {
