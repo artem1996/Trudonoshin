@@ -30,7 +30,7 @@ double* noExp::iteration() {
     int control = 1;
     int counter = 1;
     matrix -> into_matrix(0, 0, 1);
-    matrix -> into_constants(0, MAXTEMP * normal);
+    matrix -> into_constants(0, MAXTEMP / normal);
     for(int i = 1; i < capacity - 1; i++) {
 //        if(i == capacity - 3) {
 //            matrix -> into_constants(i, 200);
@@ -50,8 +50,7 @@ double* noExp::iteration() {
         matrix -> into_matrix(i, i - counter + 1, - d);
         matrix -> into_matrix(i, i + 1, - d);
 
-        if(i == control)
-        {
+        if(i == control) {
             control += ++counter;
             matrix -> into_constants(i, d * MAXTEMP);
             //matrix -> into_constants(i, 200);
