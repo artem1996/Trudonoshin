@@ -1,7 +1,7 @@
 #ifndef NOEXP_H
 #define NOEXP_H
-#include "gauss.h"
 #include "cmath"
+#include "iostream"
 
 class explicitMethod
 {

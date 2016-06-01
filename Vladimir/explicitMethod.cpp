@@ -103,11 +103,11 @@ double** explicitMethod::sharePrint(double& min, double &max) {
                min = temp;
            if(temp > max)
                max = temp;
-           cout << temp << '\t';
+           std::cout << temp << '\t';
        }
-       cout << '\n';
+       std::cout << '\n';
     }
-    cout << "---------------------------------" << endl;
+    std::cout << "---------------------------------" << std::endl;
     return prev_solution;
 }
 

@@ -9,7 +9,7 @@ noExp::noExp(int ty) {
     y = ty;
     step = LENGTH / ty;
     d = 1.0 / ( step * step);
-    normal = 1.0 / (step * sqrt(2) + 1);
+    normal = (step * sqrt(2) + 1);
     step = 1.0 / (step + 1);
     capacity = 0;
     for(int i = 0; i < ty; capacity += ++i);
@@ -32,27 +32,37 @@ double* noExp::iteration() {
     matrix -> into_matrix(0, 0, 1);
     matrix -> into_constants(0, MAXTEMP * normal);
     for(int i = 1; i < capacity - 1; i++) {
-        if(i == capacity - 3) {
-            matrix -> into_matrix(i, i, 1);
-            matrix -> into_constants(i, 200);
-            continue;
-        }
+//        if(i == capacity - 3) {
+//            matrix -> into_constants(i, 200);
+
+//            matrix -> into_matrix(i, i, 1);
+//            //matrix -> into_constants(i, 200);
+//            continue;
+//        }
         if(i == control - 1) {
-            matrix -> into_matrix(i, i, 1);
-            matrix -> into_matrix(i, i + counter - 1, - normal);
+//по бокам
+            matrix -> into_matrix(i, i + counter - 1, 1);
+            matrix -> into_matrix(i, i, - normal);
             continue;
         }
+
         matrix -> into_matrix(i, i, 4 * d);
         matrix -> into_matrix(i, i - counter + 1, - d);
         matrix -> into_matrix(i, i + 1, - d);
-        if(i == control) {
+
+        if(i == control)
+        {
             control += ++counter;
             matrix -> into_constants(i, d * MAXTEMP);
+            //matrix -> into_constants(i, 200);
+
         } else {
             matrix -> into_matrix(i , i - 1, - d);
         }
         if(control == capacity) {
+
             matrix -> into_matrix(i, i - counter + 1, - d);
+
         } else {
             matrix -> into_matrix(i, i + counter, - d);
         }
