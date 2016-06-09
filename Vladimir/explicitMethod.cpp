@@ -46,15 +46,15 @@ double explicitMethod::iteration() {
     double tTemp = 0;
     for(int i = 1; i < x - 1; i++) {
         for(int j = 1; j < y - 1; j++) {
-            if((i < x / 4 || i > x / 4 * 3) || (j < y / 3 || j > y / 3 * 2)) {
-                double temp = kx * (prev_solution[i - 1][j] - 2 * prev_solution[i][j] + prev_solution[i + 1][j]) + ky * (prev_solution[i][j - 1] - 2 * prev_solution[i][j] + prev_solution[i][j + 1]);
-                if(fabs(temp) > tTemp)
+            if((i < x / 4 || i > x / 4 * 3) || (j < y / 3 || j > y / 3 * 2)) {//считаем производные в точках
+                double temp = kx * (prev_solution[i - 1][j] - 2 * prev_solution[i][j] + prev_solution[i + 1][j]) + ky * (prev_solution[i][j - 1] - 2 * prev_solution[i][j] + prev_solution[i][j + 1]);//производная по времени
+                if(fabs(temp) > tTemp) //находится макс произвольная по времени и записывается в temp
                     tTemp = temp;
             }
         }
     }
-    if(tTemp < TROUBLE) return 0;
-    tTemp = maxDT / tTemp;
+    if(tTemp < TROUBLE) return 0;//если макс произвольная меньше то выход
+    tTemp = maxDT / tTemp;//считаем шаг по времени
     for(int i = 1; i < x - 1; i++) {
         for(int j = 1; j < y - 1; j++) {
             if((i < x / 4 || i > x / 4 * 3) || (j < y / 3 || j > y / 3 * 2)) {
