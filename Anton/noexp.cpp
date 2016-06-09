@@ -10,9 +10,9 @@ noExp::noExp(int ty) {
     step = LENGTH / ty;
     d = 1.0 / ( step * step);
     normal = (step * sqrt(2) + 1);
-    step = 1.0 / (step + 1);
+    step += 1;
     capacity = 0;
-    for(int i = 0; i < ty; capacity += ++i);
+    for(int i = 0; i < y; capacity += ++i);
     matrix = new gauss(capacity);
     matrix -> reset();
     prev_solution = new double[capacity];
@@ -65,8 +65,8 @@ double* noExp::iteration() {
             matrix -> into_matrix(i, i + counter, - d);
         }
     }
-    matrix -> into_matrix(capacity - 1, capacity - 1, 1);
-    matrix -> into_matrix(capacity - 1, capacity - 2, - step);
+    matrix -> into_matrix(capacity - 1, capacity - 2, 1);
+    matrix -> into_matrix(capacity - 1, capacity - 1, - step);
     matrix -> print_system();
     delete[] prev_solution;
     if(matrix->triangle()) {
@@ -86,8 +86,6 @@ double** noExp::share(double& min, double &max) {
     double **shareMatrix = new double*[tx];
     for(int i = 0; i < tx; i++) {
         shareMatrix[i] = new double[ty];
-        for(int j = 0; j < ty; j++)
-            shareMatrix[i][j] = 0;
     }
     int point = 0, counter = 1, j = y;
     for(int i = 0; i < capacity; i++) {

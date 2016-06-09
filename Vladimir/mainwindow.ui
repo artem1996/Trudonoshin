@@ -112,14 +112,14 @@
    <widget class="QLabel" name="ldT">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>120</x>
       <y>30</y>
-      <width>121</width>
-      <height>17</height>
+      <width>61</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>Шаг по времени</string>
+     <string>MAX dT</string>
     </property>
    </widget>
    <widget class="QLabel" name="lErr">

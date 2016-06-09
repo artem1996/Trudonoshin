@@ -97,6 +97,7 @@ void MainWindow::go_out()
 {
     static int counter;
     static double a, dt;
+    static double time = 0;
     if(!counter) {
         std::stringstream ss;
         ss << ui->dT->text().toUtf8().constData() << "\n";
@@ -105,7 +106,7 @@ void MainWindow::go_out()
         ss >> a;
         dx = atoi(ui->dX->text().toUtf8().constData());
         dy = atoi(ui->dY->text().toUtf8().constData());
-        if(dt <= (LENGTHX / dx) * (LENGTHX / dx) / 2 / a && dt <= (LENGTHY / dy) * (LENGTHY / dy) / 2 / a && dx > 7 && dy > 5 && dx % 4 == 0 && dy % 3 == 0 && a > 0) {
+        if(dx > 7 && dy > 5 && dx % 4 == 0 && dy % 3 == 0 && a > 0) {
             ui->dT->setReadOnly(1);
             ui->dX->setReadOnly(1);
             ui->dY->setReadOnly(1);
@@ -122,17 +123,19 @@ void MainWindow::go_out()
             return;
         }
     }
-    double time = counter * dt;
     static int to_exit = 0;
     if(!to_exit) {
         char out3[60];
-        if(meth->iteration() == NULL) {
-            sprintf(out3, "Усё пропало, Шеф!");
+        double dtTemp;
+        if((dtTemp = meth->iteration()) == 0) {
+            sprintf(out3, "все завершено");
             ui->lErr->setText(out3);
+            ui->buttonGo->setText("Выход");
             time = 26;
             to_exit++;
             return;
         }
+        time += dtTemp;
         sprintf(out3, "Итерация № %d; Время %f", counter, time);
         ui->lErr->setText(out3);
         counter++;
