@@ -126,21 +126,26 @@ void MainWindow::go_out()
     static int to_exit = 0;
     if(!to_exit) {
         char out3[60];
-        double dtTemp;
-        if((dtTemp = meth->iteration()) == 0) {
-            sprintf(out3, "все завершено");
+        while (time < 25) {
+            double dtTemp;
+            if((dtTemp = meth->iteration()) == 0) {
+                sprintf(out3, "все завершено");
+                ui->lErr->setText(out3);
+                ui->buttonGo->setText("Выход");
+                time = 26;
+            }
+            time += dtTemp;
+            sprintf(out3, "Итерация № %d; Время %f", counter, time);
             ui->lErr->setText(out3);
-            ui->buttonGo->setText("Выход");
-            time = 26;
-            to_exit++;
-            return;
+            counter++;
+            shara = meth->sharePrint(minTemp, maxTemp);
+            repaint();
         }
-        time += dtTemp;
-        sprintf(out3, "Итерация № %d; Время %f", counter, time);
+        sprintf(out3, "Итерация № %d; Время %f. Все кончено...", counter, time);
         ui->lErr->setText(out3);
-        counter++;
-        shara = meth->sharePrint(minTemp, maxTemp);
-        repaint();
+        ui->buttonGo->setText("Выход");
+        time = 26;
+        to_exit = 0;
     }
     if(time >= 25) {
         to_exit++;
