@@ -41,12 +41,8 @@ int gauss::triangle() {
             int j;
             for(j = i + 1; j < capacity; j++) {
                 if(fabs(matrix[j][i]) >= TROUBLE) {
-                    double* temp_adress = matrix[j];
-                    matrix[j] = matrix[i];
-                    matrix[i] = temp_adress;
-                    double temp = constants[j];
-                    constants[j] = constants[i];
-                    constants[i] = temp;
+                    std::swap(matrix[i], matrix[j]);
+                    std::swap(constants[i], constants[j]);
                     break;
                 }
             }
@@ -56,12 +52,13 @@ int gauss::triangle() {
             }
         }
         for(int j = i + 1; j < capacity; j++) {
-            if (fabs(matrix[j][i]) < TROUBLE) continue;
-            double mult = matrix[j][i] / matrix[i][i];
-            constants[j] -= constants[i] * mult;
-            matrix[j][i] = 0;
-            for(int k = i + 1; k < capacity; k++) {
-                matrix[j][k] -= matrix[i][k] * mult;
+            if (fabs(matrix[j][i]) >= TROUBLE) {
+                double mult = matrix[j][i] / matrix[i][i];
+                constants[j] -= constants[i] * mult;
+                matrix[j][i] = 0;
+                for(int k = i + 1; k < capacity; k++) {
+                    matrix[j][k] -= matrix[i][k] * mult;
+                }
             }
         }
     }

@@ -2,6 +2,7 @@
 #define GAUSS_H
 #include <iostream>
 #include <cmath>
+#include <utility>
 //#define capacity 3
 #define TROUBLE 0.000001
 using namespace std;

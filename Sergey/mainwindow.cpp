@@ -45,6 +45,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.fillRect(345, 56, 10, 10, col);
         col.setRgb(0, 0, 255);
         painter.fillRect(445, 56, 10, 10, col);
+        unsigned char paintMatrix[allX][allY][3];
         for(int i = 0; i < allX; i++)
             for(int j = 0; j < allY; j++) {
                 int qX = i / rangeX;
@@ -82,8 +83,15 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 } else {
                     G = 0;
                 }
-                col.setRgb(R * 255, G * 255, B * 255);
-//                col.setRgb(perc * 255, 0, 255 * (1 - perc));
+                paintMatrix[i][j][0] = R * 255;
+                paintMatrix[i][j][1] = G * 255;
+                paintMatrix[i][j][2] = B * 255;
+
+            }
+        for(int i = 0; i < allX; i++)
+            for(int j = 0; j < allY; j++) {
+                col.setRgb(paintMatrix[i][j][0], paintMatrix[i][j][1], paintMatrix[i][j][2]);
+    //                col.setRgb(perc * 255, 0, 255 * (1 - perc));
                 painter.setPen(col);
                 painter.drawPoint(i + 210, j + 80);
             }
