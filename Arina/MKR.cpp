@@ -31,17 +31,30 @@ double* MKR::iteration() {
     }
     for(int i = 1; i < r - 1; i++) {
         double rTemp = RINSIDE + dr*i;
-        double x = 1.0/(dr*dr);
-        double y = 1.0/(dr*rTemp*2);
-        double z = 1.0/(dfi*dfi*rTemp*rTemp);
-        for(int j = 0; j < fi; j++) {
+        double dr2 = 1.0/(dr*dr);
+        double rdr = 1.0/(dr*rTemp);
+        double r2dfi2 = 1.0/(dfi*dfi*rTemp*rTemp);
+        int j = 0;
+        int count = i * fi + j;
+        matrix ->into_matrix(count, count, -(2 * dr2 + rdr + 2 * r2dfi2));
+        matrix ->into_matrix(count, count+fi, dr2 + rdr);
+        matrix ->into_matrix(count, count-fi, dr2);
+        matrix ->into_matrix(count, count+1, r2dfi2);
+        matrix ->into_matrix(count, count-1 + fi, r2dfi2);
+        for(j = 1; j < fi - 1; j++) {
             int count = i * fi + j;
-            matrix ->into_matrix(count, count+fi, x+y+z);
-            matrix ->into_matrix(count, count, -2*(x+z));
-            matrix ->into_matrix(count, count-fi, x-y);
-            matrix ->into_matrix(count, count+1, z);
-            matrix ->into_matrix(count, count-1, z);
+            matrix ->into_matrix(count, count, -(2 * dr2 + rdr + 2 * r2dfi2));
+            matrix ->into_matrix(count, count+fi, dr2 + rdr);
+            matrix ->into_matrix(count, count-fi, dr2);
+            matrix ->into_matrix(count, count+1, r2dfi2);
+            matrix ->into_matrix(count, count-1, r2dfi2);
         }
+        count = i * fi + j;
+        matrix ->into_matrix(count, count, -(2 * dr2 + rdr + 2 * r2dfi2));
+        matrix ->into_matrix(count, count+fi, dr2 + rdr);
+        matrix ->into_matrix(count, count-fi, dr2);
+        matrix ->into_matrix(count, count+1 - fi, r2dfi2);
+        matrix ->into_matrix(count, count-1, r2dfi2);
     }
     for (int j = 0; j < fi; ++j) {
         int count = (r - 1) * fi + j;
