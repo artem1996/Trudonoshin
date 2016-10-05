@@ -112,7 +112,7 @@ void MainWindow::go_out()
             ui->buttonGo->setText("Выход");
             return;
         } else {
-            ui->lErr->setText("Что-то здесь не так... Может оплавились провода?");
+            ui->lErr->setText("Что-то здесь не так...");
             return;
         }
     } else
