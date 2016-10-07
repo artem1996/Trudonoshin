@@ -36,12 +36,12 @@ double* noExp::iteration() {
     for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
             int count = i * y + j;
-            if(i == 0 && j == y / 2) {
-                matrix -> into_matrix(count, count + y, 2);
-                matrix -> into_matrix(count, count, -2 - 3*ddx);
-                matrix -> into_constants(count, -30*ddx);
-                continue;
-            }
+//            if(i == 0 && j == y / 2) {
+//                matrix -> into_matrix(count, count + y, 2);
+//                matrix -> into_matrix(count, count, -2 - 3*ddx);
+//                matrix -> into_constants(count, -30*ddx);
+//                continue;
+//            }
             if( i > 0 && i < x - 1 && j > 0 && j < y - 1) {
                 matrix -> into_constants(count, prev_solution[count]);
                 matrix -> into_matrix(count, count, 1 + 2 * dx + 2 * dy);

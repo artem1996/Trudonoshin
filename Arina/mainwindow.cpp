@@ -34,6 +34,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         int R0 = RESOLUTION / 2;
         int lenDR = (R0 - r) / dr;
         double NetStep = 2 * M_PI / dfi;
+        r = lenDR * dr * 3;
         R0 = r + lenDR * dr;
         QColor color;
 
